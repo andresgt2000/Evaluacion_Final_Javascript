@@ -4,6 +4,7 @@ var calculadora = (function(){
     var cociente = 0;
     var teclas = document.getElementsByClassName('tecla');
     var pantalla =  document.getElementById('display');
+    var auxiliar = '';
         
         /**
          * Inicialización de calculadora
@@ -31,26 +32,37 @@ var calculadora = (function(){
          */
         var comportamientoBoton = function(objeto){
             console.log('tecla: ' + objeto.id);
+            
             switch (objeto.id) {
                 case '0':
+                    setAuxiliar('0');
                     break;
                 case '1':
+                    setAuxiliar('1');
                     break;
                 case '2':
+                    setAuxiliar('2');
                     break;
                 case '3':
+                    setAuxiliar('3');
                     break;
                 case '4':
+                    setAuxiliar('4');
                     break;
                 case '5':
+                    setAuxiliar('5');
                     break;
                 case '6':
+                    setAuxiliar('6');
                     break;
                 case '7':
+                    setAuxiliar('7');
                     break;
                 case '8':
+                    setAuxiliar('8');
                     break;
                 case '9':
+                    setAuxiliar('9');
                     break;
                 case 'punto':                    
                     break;
@@ -73,13 +85,42 @@ var calculadora = (function(){
                     break;
             }
             
+            
         };
         
+        /**
+         * 
+         * @param {type} aux
+         * @returns {undefined}
+         */
+        var setAuxiliar = function(aux) {
+            if (auxiliar.length < 8){
+                if(auxiliar.length === 0 && aux === '0') {
+                    console.log('x1');
+                    auxiliar = aux;
+                } else {                
+                    auxiliar += aux;                
+                }
+            }
+            
+            setPantalla(auxiliar);
+        };
+        
+        /**
+         * Devuelve el display a valor inicial.
+         * @returns {undefined}
+         */
         var resetPantalla =  function() {
-            pantalla.innerHTML = '0';
+            auxiliar = '';
+            setPantalla('0');
         };
         
-        var setPantalla = function(valor) {
+        /**
+         * Asigna valor al display
+         * @param {type} valor
+         * @returns {undefined}
+         */
+        var setPantalla = function(valor) { 
             pantalla.innerHTML =  valor;
         }
         
