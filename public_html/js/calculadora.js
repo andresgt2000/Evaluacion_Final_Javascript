@@ -2,7 +2,8 @@ var calculadora = (function(){
     var resultado = 0;
     var producto = 0;
     var cociente = 0;
-    var teclas = document.getElementsByClassName('tecla');    
+    var teclas = document.getElementsByClassName('tecla');
+    var pantalla =  document.getElementById('display');
         
         /**
          * Inicialización de calculadora
@@ -51,11 +52,36 @@ var calculadora = (function(){
                     break;
                 case '9':
                     break;
+                case 'punto':                    
+                    break;
+                case 'on':
+                    resetPantalla();
+                    break;
                 case 'signo':
+                    break;
+                case 'raiz':
+                    break;
+                case 'dividido':
+                    break;
+                case 'por':
+                    break;
+                case 'menos':
+                    break;  
+                case 'suma':
+                    break;    
+                case 'igual':
                     break;
             }
             
         };
+        
+        var resetPantalla =  function() {
+            pantalla.innerHTML = '0';
+        };
+        
+        var setPantalla = function(valor) {
+            pantalla.innerHTML =  valor;
+        }
         
         /**
          * Reducir el tamaño del botón.
