@@ -4,7 +4,8 @@ var calculadora = (function(){
     var cociente = 0;
     var teclas = document.getElementsByClassName('tecla');
     var pantalla =  document.getElementById('display');
-    var auxiliar = '';
+    var auxiliar = '0';
+    var dotCount = 0;
         
         /**
          * Inicialización de calculadora
@@ -64,7 +65,8 @@ var calculadora = (function(){
                 case '9':
                     setAuxiliar('9');
                     break;
-                case 'punto':                    
+                case 'punto':
+                    setAuxiliar('.');
                     break;
                 case 'on':
                     resetPantalla();
@@ -94,14 +96,26 @@ var calculadora = (function(){
          * @returns {undefined}
          */
         var setAuxiliar = function(aux) {
-            if (auxiliar.length < 8){
-                if(auxiliar.length === 0 && aux === '0') {
-                    console.log('x1');
+            
+            if (auxiliar.length < 8) { //LIMITE A 8 CARACTERES
+                if (auxiliar === '0' && aux !== '.' ) { //SE EVITAN CEROS A LA IZQUIERDA
                     auxiliar = aux;
-                } else {                
-                    auxiliar += aux;                
-                }
+                } else {             
+                    if (aux ==='.') { //SE EVITA QUE SE PONGA MAS DE 1 PUNTO
+                        if (dotCount === 0) {
+                            dotCount += 1;
+                        } else {
+                            aux = '';
+                        }
+                    }
+                    
+                    auxiliar += aux;
+                }     
+                
             }
+            
+            console.log('Len: ' + auxiliar.length);
+            console.log('auxiliar: ' + auxiliar);
             
             setPantalla(auxiliar);
         };
@@ -111,8 +125,10 @@ var calculadora = (function(){
          * @returns {undefined}
          */
         var resetPantalla =  function() {
-            auxiliar = '';
-            setPantalla('0');
+            auxiliar = '0';
+            dotCount = 0;
+            console.log('auxiliar: ' + auxiliar);
+            setPantalla(auxiliar);
         };
         
         /**
