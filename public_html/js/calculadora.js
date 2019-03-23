@@ -8,7 +8,8 @@ var calculadora = (function(){
     var dotCount = 0;
         
         /**
-         * Inicialización de calculadora
+         * INICIALIZACIÓN DE CALCULADORA
+         * ASIGNACIÓN DE COMPORTAMIENTO DE BOTONOES
          * @returns {undefined}
          */
         var inicializar = function() {
@@ -115,7 +116,7 @@ var calculadora = (function(){
             }
             
             console.log('Len: ' + auxiliar.length);
-            console.log('auxiliar: ' + auxiliar);
+            
             
             setPantalla(auxiliar);
         };
@@ -125,9 +126,8 @@ var calculadora = (function(){
          * @returns {undefined}
          */
         var resetPantalla =  function() {
-            auxiliar = '0';
-            dotCount = 0;
-            console.log('auxiliar: ' + auxiliar);
+            auxiliar = '0'; //SE INICIALIZA AUXILIAR
+            dotCount = 0; //SE INICIALIZA CONTADOR DE PUNTOS
             setPantalla(auxiliar);
         };
         
@@ -138,6 +138,7 @@ var calculadora = (function(){
          */
         var setPantalla = function(valor) { 
             pantalla.innerHTML =  valor;
+            console.log('DISPLAY: ' + valor);
         }
         
         /**
