@@ -1,11 +1,14 @@
 var calculadora = (function(){
-    var resultado = 0;
+    //var resultado = 0;
     var producto = 0;
     var cociente = 0;
     var teclas = document.getElementsByClassName('tecla');
     var pantalla =  document.getElementById('display');
     var auxiliar = '0';
     var dotCount = 0;
+    var operacion = '';
+    var operando1 = 0;
+    var operando2 = 0;
         
         /**
          * INICIALIZACIÓN DE CALCULADORA
@@ -72,32 +75,36 @@ var calculadora = (function(){
                 case 'on':
                     resetPantalla();
                     break;
-                case 'signo':
+                case 'sign':
+                    setSigno();
                     break;
-                case 'raiz':
+                case 'raiz': 
+                    getRaiz2();
                     break;
                 case 'dividido':
+                    setOperacion('/');
                     break;
                 case 'por':
+                    setOperacion('*');
                     break;
                 case 'menos':
+                    setOperacion('-');
                     break;  
-                case 'suma':
+                case 'mas':
+                    setOperacion('+');
                     break;    
                 case 'igual':
+                    computoNumerico();
                     break;
             }
-            
-            
         };
         
         /**
-         * 
+         * Asigna los valores a auxiliar
          * @param {type} aux
          * @returns {undefined}
          */
         var setAuxiliar = function(aux) {
-            
             if (auxiliar.length < 8) { //LIMITE A 8 CARACTERES
                 if (auxiliar === '0' && aux !== '.' ) { //SE EVITAN CEROS A LA IZQUIERDA
                     auxiliar = aux;
@@ -109,25 +116,43 @@ var calculadora = (function(){
                             aux = '';
                         }
                     }
-                    
                     auxiliar += aux;
-                }     
-                
+                }
             }
-            
             console.log('Len: ' + auxiliar.length);
-            
-            
             setPantalla(auxiliar);
+        };
+        
+        /**
+         * 
+         * @param {type} elemental
+         * @returns {undefined}
+         */
+        var setOperacion = function (elemental) {
+            operando1 = 0;
+            operacion = elemental;
+            operando1 = stringToNumber(auxiliar);
+            resetPantalla();
         };
         
         /**
          * Devuelve el display a valor inicial.
          * @returns {undefined}
          */
-        var resetPantalla =  function() {
-            auxiliar = '0'; //SE INICIALIZA AUXILIAR
+        var resetPantalla = function() {
+            auxiliar = '0'; //SE INICIALIZA AUXILIAR A 0
             dotCount = 0; //SE INICIALIZA CONTADOR DE PUNTOS
+            setPantalla(auxiliar);
+        };
+        
+        /**
+         * Cambia el signo del operando
+         * @returns {undefined}
+         */
+        var setSigno = function() {
+            var temp = 0;        
+            temp = operacionCambiarSigno(stringToNumber(auxiliar));
+            auxiliar  = temp.toString();
             setPantalla(auxiliar);
         };
         
@@ -140,6 +165,63 @@ var calculadora = (function(){
             pantalla.innerHTML =  valor;
             console.log('DISPLAY: ' + valor);
         }
+        
+        /**
+         * Convierte las cadenas a su valor numerico
+         * @param {type} cadena
+         * @returns {Number}
+         */
+        var stringToNumber =  function(cadena) {
+            var numero = 0;
+            if (cadena.indexOf('.') !== '') { //BUSCA UN PUNTO PARA IDENTIFICAR ENTEROS O FLOTANTES
+                numero = parseFloat(cadena);
+            } else {
+                numero  = parseInt(cadena);
+            }
+            return numero;
+        };
+        
+        /**
+         * Obtener la raiz cuadrada de un numero.
+         * @returns {undefined}
+         */
+        var getRaiz2 =  function () {
+            var resultado = 0;
+            resultado = operacionRaizCuadrada(stringToNumber(auxiliar));
+            auxiliar = resultado;
+            setPantalla(auxiliar);
+        };
+        
+        /**
+         * Realizar el computo numérico.
+         * @returns {undefined}
+         */
+        var computoNumerico = function() {
+            var resultado = 0;
+            operando2 = stringToNumber(auxiliar);
+            switch (operacion) {
+                case '+':
+                    resultado = operacionAritmeticaSuma(operando1,operando2);
+                    break;
+                case '-':
+                    resultado = operacionAritmeticaResta(operando1,operando2);
+                    break;
+                case '*':
+                    resultado = operacionAritmeticaMultiplicar(operando1,operando2);
+                    break;
+                case '/':
+                    resultado = operacionAritmeticaDividir(operando1,operando2);
+                    break;
+            }
+            
+            //SE VALIDA QUE EL RESULTADO NO EXCEDA LOS 
+            /*if (resultado.toString().length > 6) {
+                resultado = resultado.toFixed(6);
+            }*/
+            
+            auxiliar = resultado.toString();
+            setPantalla(auxiliar);
+        };
         
         /**
          * Reducir el tamaño del botón.
@@ -216,9 +298,9 @@ var calculadora = (function(){
         };
         
         /**
-         * 
+         * Convierte un número a negativo o positivo,
          * @param {type} operando
-         * @returns {Number|sumando1|sumando2}
+         * @returns {Number|resultado}
          */
         var operacionCambiarSigno =  function (operando) {
             resultado = 0;
@@ -227,6 +309,26 @@ var calculadora = (function(){
             }
             console.log('CAMBIANDO EL SIGNO (+/-) DE ' 
                     + operando + ' = ' + resultado);
+            return resultado;
+        };
+        
+        /**
+         * Devuelve la raiz cuadrada de un numero
+         * @param {type} operando
+         * @returns {sumando1|Number|resultado|sumando2}
+         */
+        var operacionRaizCuadrada = function (operando) {
+            resultado = 0;
+            resultado = Math.sqrt(operando);
+            if (resultado.toString().length > 6) {
+                resultado = resultado.toFixed(6);
+            }
+            console.log('LA RAIZ CUADRADA DE ' 
+                    + operando + ' ES ' + resultado);
+            
+            /*console.log('LA RAIZ CUADRADA DE ' 
+                    + operando + ' ES ' + resultado.toFixed(8));*/
+            
             return resultado;
         };
     
@@ -245,6 +347,9 @@ var calculadora = (function(){
         },
         signo : function (a) {
             return operacionCambiarSigno(a);
+        },
+        raiz : function (a) {
+            return  operacionRaizCuadrada(a);
         },
         init : function () {
             inicializar();
