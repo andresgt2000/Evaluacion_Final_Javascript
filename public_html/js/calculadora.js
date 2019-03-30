@@ -9,6 +9,7 @@ var calculadora = (function(){
     var operacion = '';
     var operando1 = 0;
     var operando2 = 0;
+    var aritmeticaCount = 0;
         
         /**
          * INICIALIZACIÓN DE CALCULADORA
@@ -36,7 +37,7 @@ var calculadora = (function(){
          * @returns {undefined}
          */
         var comportamientoBoton = function(objeto){
-            console.log('tecla: ' + objeto.id);
+            //console.log('tecla: ' + objeto.id);
             
             switch (objeto.id) {
                 case '0':
@@ -105,34 +106,55 @@ var calculadora = (function(){
          * @returns {undefined}
          */
         var setAuxiliar = function(aux) {
-            if (auxiliar.length < 8) { //LIMITE A 8 CARACTERES
-                if (auxiliar === '0' && aux !== '.' ) { //SE EVITAN CEROS A LA IZQUIERDA
+            //LIMITE A 8 CARACTERES
+            if (auxiliar.length < 8) { 
+                //SE EVITAN MAS DE  1 CERO A LA IZQUIERDA
+                if (auxiliar === '0' && aux !== '.' ) { 
                     auxiliar = aux;
-                } else {             
-                    if (aux ==='.') { //SE EVITA QUE SE PONGA MAS DE 1 PUNTO
-                        if (dotCount === 0) {
-                            dotCount += 1;
+                } else {                    
+                    //SI AUX ES . HAY QUE VALIDAR
+                    if (aux ==='.') { 
+                        // SE PERMITE PONER UN PUNTO MIENTRAS LEN < 7
+                        if (auxiliar.length < 7) { 
+                            //SE EVITA QUE SE PONGA MAS DE 1 PUNTO
+                            if (dotCount === 0) { 
+                                dotCount += 1;
+                            } else {
+                                aux = '';
+                            }
                         } else {
                             aux = '';
-                        }
+                        }                        
                     }
                     auxiliar += aux;
                 }
             }
-            console.log('Len: ' + auxiliar.length);
+            //console.log('Len: ' + auxiliar.length);
             setPantalla(auxiliar);
         };
         
         /**
-         * 
+         * ASIGNA LA OPERACION A REALIZAR
          * @param {type} elemental
          * @returns {undefined}
          */
         var setOperacion = function (elemental) {
-            operando1 = 0;
-            operacion = elemental;
-            operando1 = stringToNumber(auxiliar);
-            resetPantalla();
+            //CONTROL DE ENCADENADO ARITMETICO
+            aritmeticaCount += 1; 
+            console.log('ca: ' + aritmeticaCount + ' ope ' + elemental + 'aux: ' + auxiliar);
+            if (aritmeticaCount < 2) {
+                operando1 = 0;
+                operacion = elemental;
+                operando1 = stringToNumber(auxiliar);
+                resetPantalla();
+            } else {
+                computoNumerico();                
+                operacion = elemental;
+                operando1 = stringToNumber(auxiliar);
+                
+            }
+            
+            
         };
         
         /**
@@ -163,7 +185,7 @@ var calculadora = (function(){
          */
         var setPantalla = function(valor) { 
             pantalla.innerHTML =  valor;
-            console.log('DISPLAY: ' + valor);
+            //console.log('DISPLAY: ' + valor);
         }
         
         /**
@@ -197,6 +219,7 @@ var calculadora = (function(){
          * @returns {undefined}
          */
         var computoNumerico = function() {
+            aritmeticaCount = 0;            
             var resultado = 0;
             operando2 = stringToNumber(auxiliar);
             switch (operacion) {
@@ -214,10 +237,31 @@ var calculadora = (function(){
                     break;
             }
             
-            //SE VALIDA QUE EL RESULTADO NO EXCEDA LOS 
-            /*if (resultado.toString().length > 6) {
-                resultado = resultado.toFixed(6);
-            }*/
+            
+            //console.log('Posición del (.): ' + resultado.toString().lastIndexOf('.'));
+            
+            //SE VALIDA QUE EL RESULTADO NO EXCEDA LOS 8 CARACTERES
+            if (resultado.toString().length > 8) {
+                
+                var punto = resultado.toString().lastIndexOf('.');
+                
+                if ( punto < 0 || punto === 8 ){
+                    resultado = 'OVERFLOW';
+                } else{
+                    if (punto <= 5) {
+                        resultado = resultado.toFixed(3);
+                    } 
+                    
+                    if (punto === 6) {
+                            resultado = resultado.toFixed(2);
+                        } 
+                        
+                    if (punto === 7) {
+                        resultado = resultado.toFixed(1);
+                    }
+                    
+                }
+            }
             
             auxiliar = resultado.toString();
             setPantalla(auxiliar);
