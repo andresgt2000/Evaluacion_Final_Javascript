@@ -1,6 +1,4 @@
 var calculadora = (function(){
-    var producto = 0;
-    var cociente = 0;
     var teclas = document.getElementsByClassName('tecla');
     var pantalla = document.getElementById('display');
     var auxiliar = '0';
@@ -317,7 +315,7 @@ var calculadora = (function(){
          * @returns {Number|sumando1|sumando2}
          */
         var operacionAritmeticaSuma =  function(sumando1, sumando2) {
-            resultado = sumando1 + sumando2;
+            var resultado = sumando1 + sumando2;
             console.log('EL RESULTADO DE ' + sumando1 + ' + ' 
                     + sumando2 + ' = ' + resultado);
             return resultado;
@@ -330,7 +328,7 @@ var calculadora = (function(){
          * @returns {Number|sumando1|sumando2}
          */
         var operacionAritmeticaResta = function(minuendo,sustraendo) {
-            resultado = minuendo - sustraendo;
+            var resultado = minuendo - sustraendo;
             console.log('EL RESULTADO DE ' + minuendo + ' - ' 
                     + sustraendo + ' = ' + resultado);
             return  resultado;
@@ -343,7 +341,7 @@ var calculadora = (function(){
          * @returns {Number}
          */
         var operacionAritmeticaMultiplicar = function(multiplicando, multiplicador) {
-            producto =  multiplicando * multiplicador;
+            var producto =  multiplicando * multiplicador;
             console.log('EL RESULTADO DE ' + multiplicando + ' * ' 
                     + multiplicador + ' = ' + producto);
             return  producto;
@@ -356,6 +354,7 @@ var calculadora = (function(){
          * @returns {Number|String}
          */
         var operacionAritmeticaDividir = function (dividendo, divisor) {
+            var cociente = 0;
             if (divisor !== 0) {
                cociente =  dividendo / divisor;
             } else {
