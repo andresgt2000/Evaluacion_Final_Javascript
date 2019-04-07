@@ -1,15 +1,13 @@
 var calculadora = (function(){
-    //var resultado = 0;
     var producto = 0;
     var cociente = 0;
     var teclas = document.getElementsByClassName('tecla');
-    var pantalla =  document.getElementById('display');
+    var pantalla = document.getElementById('display');
     var auxiliar = '0';
     var dotCount = 0;
-    var operacion = '';
-    var operando1 = 0;
-    var operando2 = 0;
+    var ecuacion = '';
     var aritmeticaCount = 0;
+
         
         /**
          * INICIALIZACIÓN DE CALCULADORA
@@ -139,22 +137,14 @@ var calculadora = (function(){
          * @returns {undefined}
          */
         var setOperacion = function (elemental) {
-            //CONTROL DE ENCADENADO ARITMETICO
-            aritmeticaCount += 1; 
-            console.log('ca: ' + aritmeticaCount + ' ope ' + elemental + 'aux: ' + auxiliar);
-            if (aritmeticaCount < 2) {
-                operando1 = 0;
-                operacion = elemental;
-                operando1 = stringToNumber(auxiliar);
-                resetPantalla();
-            } else {
-                computoNumerico();                
-                operacion = elemental;
-                operando1 = stringToNumber(auxiliar);
-                
-            }
+            //CONTEO  DE OPERACIONES ARITMETICAS
+            aritmeticaCount += 1;
             
-            
+            ecuacion += auxiliar;
+            ecuacion += elemental;
+            //console.log('ca: ' + aritmeticaCount + ' Ecuación: ' + ecuacion);
+            auxiliar ='0';
+            setPantalla(auxiliar);
         };
         
         /**
@@ -164,6 +154,7 @@ var calculadora = (function(){
         var resetPantalla = function() {
             auxiliar = '0'; //SE INICIALIZA AUXILIAR A 0
             dotCount = 0; //SE INICIALIZA CONTADOR DE PUNTOS
+            ecuacion = '';
             setPantalla(auxiliar);
         };
         
@@ -216,30 +207,63 @@ var calculadora = (function(){
         
         /**
          * Realizar el computo numérico.
+         * 
+         * JAVASCRIPT PERMITE RESOLVER ECUACIONES MATEMATICAS 
+         * POR MEDIO DE EVAL POR LO QUE SERIA MAS SENCILLO EVALUAR TODA 
+         * ECUACIÓN CON UN SIMPLE EVAL, SIN EMABRGO YA QUE EL PROYECTO 
+         * REQUIERE CREAR LAS CUATRO OPERACIONES BASICAS Y SE TOMA 
+         * ENCUENTA CORRECTAMENTE LA PRESEDENCIA DE OPERADORES.
+         * 
          * @returns {undefined}
          */
         var computoNumerico = function() {
-            aritmeticaCount = 0;            
+            var operaciones = ['+','-','*','/'];
+            var operandos;
             var resultado = 0;
-            operando2 = stringToNumber(auxiliar);
-            switch (operacion) {
-                case '+':
-                    resultado = operacionAritmeticaSuma(operando1,operando2);
-                    break;
-                case '-':
-                    resultado = operacionAritmeticaResta(operando1,operando2);
-                    break;
-                case '*':
-                    resultado = operacionAritmeticaMultiplicar(operando1,operando2);
-                    break;
-                case '/':
-                    resultado = operacionAritmeticaDividir(operando1,operando2);
-                    break;
-            }
-            
-            
-            //console.log('Posición del (.): ' + resultado.toString().lastIndexOf('.'));
-            
+            ecuacion += auxiliar;
+            console.log('Ecuacion: ' + ecuacion);
+            if(aritmeticaCount < 2) {
+                var operacion = '';
+                 for (var i = 0; i < operaciones.length; i++) {
+                    if (ecuacion.indexOf(operaciones[i]) !== -1){
+                        operacion = operaciones[i];
+                        operandos =  ecuacion.split(operacion);
+                        console.log('Operandos: ' + operandos.toString());
+                        break;
+                    } 
+                 }
+                 
+                switch (operacion) {
+                    case '+':
+                        resultado = operacionAritmeticaSuma(
+                                                stringToNumber(operandos[0]),
+                                                stringToNumber(operandos[1]));
+                        break;
+                    case '-':
+                        resultado = operacionAritmeticaResta(
+                                                stringToNumber(operandos[0]),
+                                                stringToNumber(operandos[1]));
+                        break;
+                    case '*':
+                        resultado = operacionAritmeticaMultiplicar(
+                                                stringToNumber(operandos[0]),
+                                                stringToNumber(operandos[1]));
+                        break;
+                    case '/':
+                        resultado = operacionAritmeticaDividir(
+                                                stringToNumber(operandos[0]),
+                                                stringToNumber(operandos[1]));
+                        break;
+                }
+            } else {
+                /*
+                 * CUANDO SON OPERACIONES ENCADENASDAS TODO LO RESUELVE EL EVAL
+                 * GRACIAS EVAL!!!
+                 */
+                resultado =  eval(ecuacion);
+                console.log('Resultado de ' + ecuacion + ' = ' + resultado);
+            }  
+
             //SE VALIDA QUE EL RESULTADO NO EXCEDA LOS 8 CARACTERES
             if (resultado.toString().length > 8) {
                 
@@ -258,11 +282,12 @@ var calculadora = (function(){
                         
                     if (punto === 7) {
                         resultado = resultado.toFixed(1);
-                    }
-                    
+                    }                    
                 }
             }
             
+            aritmeticaCount = 0;
+            ecuacion = '';
             auxiliar = resultado.toString();
             setPantalla(auxiliar);
         };
