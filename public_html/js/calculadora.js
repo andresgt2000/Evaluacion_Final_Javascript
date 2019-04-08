@@ -29,7 +29,7 @@ var calculadora = (function(){
     };
         
     /**
-     * Comportamiento de teclas.
+     * ASIGNA EL COMPORTAMIENTO A LAS TECLAS.
      * @param {type} objeto
      * @returns {undefined}
      */
@@ -171,7 +171,7 @@ var calculadora = (function(){
     };
         
     /**
-     * Asigna valor al display
+     * ASIGNA EL VALOR AL DISPLAY
      * @param {type} valor
      * @returns {undefined}
      */
@@ -181,7 +181,7 @@ var calculadora = (function(){
     }
         
     /**
-     * Convierte las cadenas a su valor numerico
+     * CONVIERTE LAS CADENAS A SU VALOR NUMERICO.
      * @param {type} cadena
      * @returns {Number}
      */
@@ -196,7 +196,7 @@ var calculadora = (function(){
     };
         
     /**
-     * Obtener la raiz cuadrada de un numero.
+     * OPTENER LA RAÍZ CUADRADA DE UN NÚMERO.
      * @returns {undefined}
      */
     var getRaiz2 =  function () {
